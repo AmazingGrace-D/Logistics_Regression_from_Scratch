@@ -8,6 +8,7 @@ Created on Tue Apr 21 16:49:53 2020
 
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
 from scipy.optimize import fmin_tnc
 
 class LogisticRegressionUsingGD:
@@ -98,34 +99,35 @@ class LogisticRegressionUsingGD:
     
 
 ################ TESTING OUR MODEL ###############################################
-np.random.seed(12)
-num_observations = 5000
 
-x1 = np.random.multivariate_normal([0,0], [[1, .75],[.75, 1]], num_observations)
-x2 = np.random.multivariate_normal([1,4], [[1, .75],[.75, 1]], num_observations)
+data = pd.read_csv("marks.txt")
 
-simulated_separable_features = np.vstack((x1, x2)).astype(np.float32)
-simulated_labels = np.hstack((np.zeros(num_observations),
-                              np.ones(num_observations)))
+# X = feature values, all the columns except the last column
+X = data.iloc[:, :-1]
 
-plt.figure(figsize=(12,8))
-plt.scatter(simulated_separable_features[:, 0], simulated_separable_features[:, 1],
-            c = simulated_labels, alpha = .4)
+# y = target values, last column of the data frame
+y = data.iloc[:, -1]
 
-X = simulated_separable_features
-#X = np.c_[np.ones((X.shape[0], 1)), X]
-y = simulated_labels
-#y = y[:, np.newaxis]
+# filter out the applicants that got admitted
+admitted = data.loc[y == 1]
 
-X = np.c_[np.ones((X.shape[0], 1)), X]    # Adding Intercept
+# filter out the applicants that din't get admission
+not_admitted = data.loc[y == 0]
+
+# plots
+plt.scatter(admitted.iloc[:, 0], admitted.iloc[:, 1], s=10, label='Admitted')
+plt.scatter(not_admitted.iloc[:, 0], not_admitted.iloc[:, 1], s=10,
+            label='Not Admitted')
+
+# preparing the data for building the model
+
+X = np.c_[np.ones((X.shape[0], 1)), X]
 y = y[:, np.newaxis]
-
 theta = np.zeros((X.shape[1], 1))
 
 model = LogisticRegressionUsingGD()
-
 model.fit(X, y, theta)
-accuracy = model.accuracy(X, y)
+accuracy = model.accuracy(X, y.flatten())
 parameters = model.w_
 print("The accuracy of the model is {}".format(accuracy))
 print("The model parameters using Gradient descent")
