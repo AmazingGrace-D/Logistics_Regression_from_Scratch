@@ -1,0 +1,2 @@
+# Logistics_Regression_from_Scratch
+Implementing standard logistic regression from scratch
