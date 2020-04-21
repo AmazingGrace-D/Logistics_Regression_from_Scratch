@@ -1,4 +1,4 @@
-# Logistics_Regression_from_Scratch
+# Olutomilayo Amazing-Grace Logistics_Regression_from_Scratch
 Implementing standard logistic regression from scratch
 
 Logistic Regression is a generalized Linear Regression in which we do not output the weighted
